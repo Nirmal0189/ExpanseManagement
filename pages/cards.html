@@ -1,0 +1,261 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Cards - Expense Manager</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/dashboard-new.css">
+    <style>
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 24px;
+            margin-top: 24px;
+        }
+
+        .credit-card {
+            background: linear-gradient(135deg, #1a1a2e 0%, #16213e 100%);
+            border-radius: 16px;
+            padding: 24px;
+            color: white;
+            position: relative;
+            overflow: hidden;
+            aspect-ratio: 1.586;
+            display: flex;
+            flex-direction: column;
+            justify-content: space-between;
+            box-shadow: 0 10px 20px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s;
+        }
+
+        .credit-card:hover {
+            transform: translateY(-5px);
+        }
+
+        .card-chip {
+            width: 40px;
+            height: 30px;
+            background: linear-gradient(135deg, #ffd700 0%, #b8860b 100%);
+            border-radius: 4px;
+            margin-bottom: 20px;
+        }
+
+        .card-number {
+            font-family: 'Courier New', monospace;
+            font-size: 22px;
+            letter-spacing: 2px;
+            margin-bottom: 20px;
+            text-shadow: 0 2px 4px rgba(0, 0, 0, 0.3);
+        }
+
+        .card-details {
+            display: flex;
+            justify-content: space-between;
+            font-size: 12px;
+            text-transform: uppercase;
+            color: rgba(255, 255, 255, 0.7);
+        }
+
+        .card-holder,
+        .card-expiry {
+            display: flex;
+            flex-direction: column;
+            gap: 4px;
+        }
+
+        .detail-value {
+            color: white;
+            font-size: 14px;
+            font-weight: 600;
+        }
+
+        .card-brand {
+            position: absolute;
+            top: 24px;
+            right: 24px;
+            font-size: 24px;
+            font-style: italic;
+            font-weight: 800;
+        }
+
+        .add-card-btn {
+            height: 100%;
+            min-height: 200px;
+            border: 2px dashed #e5e7eb;
+            border-radius: 16px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            gap: 12px;
+            background: rgba(255, 255, 255, 0.5);
+            cursor: pointer;
+            transition: all 0.2s;
+        }
+
+        .add-card-btn:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.05);
+        }
+
+        body.dark-mode .add-card-btn {
+            border-color: rgba(255, 255, 255, 0.1);
+            background: rgba(255, 255, 255, 0.02);
+        }
+
+        body.dark-mode .add-card-btn:hover {
+            border-color: #667eea;
+            background: rgba(102, 126, 234, 0.1);
+        }
+    </style>
+</head>
+
+<body class="dashboard-body">
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                    <line x1="8" y1="21" x2="16" y2="21" />
+                    <line x1="12" y1="17" x2="12" y2="21" />
+                </svg>
+                <span>Expensify</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" />
+                    <rect x="14" y="3" width="7" height="7" />
+                    <rect x="14" y="14" width="7" height="7" />
+                    <rect x="3" y="14" width="7" height="7" />
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="history.html" class="nav-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+                <span>History</span>
+            </a>
+            <a href="cards.html" class="nav-item active">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                    <line x1="1" y1="10" x2="23" y2="10" />
+                </svg>
+                <span>Cards</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="checkbox">
+                    <input type="checkbox" id="checkbox" />
+                    <div class="slider round"></div>
+                </label>
+                <em>Dark Mode</em>
+            </div>
+
+            <div class="user-profile" style="margin-top: 20px;">
+                <div class="user-avatar">
+                    <span id="userInitials">TU</span>
+                </div>
+                <div class="user-info">
+                    <div class="user-name" id="sidebarUserName">Test User</div>
+                    <button id="logoutBtn" class="logout-link">Logout</button>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <main class="main-content">
+        <header class="page-header">
+            <div class="header-left">
+                <button class="mobile-menu-btn" id="openSidebar">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </button>
+                <h1>My Cards</h1>
+            </div>
+            <div class="header-right">
+                <button id="addCardBtn" class="btn-primary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    Add New Card
+                </button>
+            </div>
+        </header>
+
+        <div class="cards-grid" id="cardsContainer">
+            <!-- Cards populated by JS -->
+        </div>
+    </main>
+
+    <!-- Add Card Modal -->
+    <div id="cardModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Add New Card</h2>
+                <button class="modal-close" id="closeCardModal">&times;</button>
+            </div>
+            <form id="cardForm">
+                <div class="form-group">
+                    <label class="form-label">Card Holder Name</label>
+                    <input type="text" id="cardHolder" class="form-input" required placeholder="JOHN DOE">
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Card Number</label>
+                    <input type="text" id="cardNumber" class="form-input" required placeholder="0000 0000 0000 0000"
+                        maxlength="19">
+                </div>
+                <div class="flex" style="gap: 16px;">
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">Expiry Date</label>
+                        <input type="text" id="cardExpiry" class="form-input" required placeholder="MM/YY"
+                            maxlength="5">
+                    </div>
+                    <div class="form-group" style="flex: 1;">
+                        <label class="form-label">CVV</label>
+                        <input type="password" id="cardCvv" class="form-input" required placeholder="123" maxlength="4">
+                    </div>
+                </div>
+                <div class="form-group">
+                    <label class="form-label">Card Brand</label>
+                    <select id="cardBrand" class="form-select">
+                        <option value="Visa">Visa</option>
+                        <option value="Mastercard">Mastercard</option>
+                        <option value="Amex">American Express</option>
+                    </select>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-outline" id="cancelCardBtn">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Card</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    <script src="../js/firebase-config.js"></script>
+
+    <script src="../js/utils/storage.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/cards.js"></script>
+    <script src="../js/theme.js"></script>
+</body>
+
+</html>

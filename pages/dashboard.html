@@ -1,0 +1,393 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Manage your expenses and track spending">
+    <title>Dashboard - Expense Manager</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/dashboard-new.css">
+    <link rel="stylesheet" href="../css/budget.css">
+    <link rel="stylesheet" href="../css/mobile.css">
+</head>
+
+<body class="dashboard-body">
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                    <line x1="8" y1="21" x2="16" y2="21" />
+                    <line x1="12" y1="17" x2="12" y2="21" />
+                </svg>
+                <span>Expensify</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item active">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" />
+                    <rect x="14" y="3" width="7" height="7" />
+                    <rect x="14" y="14" width="7" height="7" />
+                    <rect x="3" y="14" width="7" height="7" />
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="history.html" class="nav-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+                <span>History</span>
+            </a>
+            <a href="cards.html" class="nav-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                    <line x1="1" y1="10" x2="23" y2="10" />
+                </svg>
+                <span>Cards</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="checkbox">
+                    <input type="checkbox" id="checkbox" />
+                    <div class="slider round"></div>
+                </label>
+                <em>Dark Mode</em>
+            </div>
+
+            <div class="user-profile" style="margin-top: 20px;">
+                <div class="user-avatar">
+                    <span id="userInitials">TU</span>
+                </div>
+                <div class="user-info">
+                    <div class="user-name" id="sidebarUserName">Test User</div>
+                    <button id="logoutBtn" class="logout-link">Logout</button>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Header -->
+        <header class="page-header">
+            <div class="header-left">
+                <button class="mobile-menu-btn" id="openSidebar">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </button>
+                <div>
+                    <h1>Dashboard</h1>
+                    <p class="header-subtitle">Tracking spending for <span id="currentMonth">January 2025</span></p>
+                </div>
+            </div>
+            <div class="header-right">
+                <select id="monthSelector" class="month-selector">
+                    <option value="">January 2025</option>
+                </select>
+                <button id="addTransactionBtn" class="btn-primary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="12" y1="5" x2="12" y2="19" />
+                        <line x1="5" y1="12" x2="19" y2="12" />
+                    </svg>
+                    Add transaction
+                </button>
+            </div>
+        </header>
+
+        <!-- Stats Cards -->
+        <div class="stats-grid">
+            <div class="stat-card">
+                <div class="stat-icon green">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="2" y="7" width="20" height="14" rx="2" ry="2" />
+                        <path d="M16 21V5a2 2 0 0 0-2-2h-4a2 2 0 0 0-2 2v16" />
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Total transactions</div>
+                    <div class="stat-value" id="totalTransactions">10</div>
+                </div>
+                <div class="stat-change positive">+8%</div>
+            </div>
+
+            <div class="stat-card" id="incomeStatCard" style="cursor: pointer; position: relative; overflow: hidden;">
+                <canvas id="budgetMiniChart"></canvas>
+                <!-- Overlay transparent div to capture clicks easier if canvas has issues -->
+                <div style="position: absolute; top:0; left:0; width:100%; height:100%; z-index: 10;"></div>
+            </div>
+
+            <div class="stat-card">
+                <div class="stat-icon red">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                        <line x1="1" y1="10" x2="23" y2="10" />
+                    </svg>
+                </div>
+                <div class="stat-content">
+                    <div class="stat-label">Total expenses</div>
+                    <div class="stat-value" id="totalExpenses">₹50,000</div>
+                </div>
+                <div class="stat-change negative">-2%</div>
+            </div>
+        </div>
+
+        <!-- Monthly Budget Section -->
+        <div class="budget-section card">
+            <div class="budget-header">
+                <div>
+                    <h3>Monthly Budget</h3>
+                    <p class="budget-subtitle">Track your spending against your budget</p>
+                </div>
+                <button id="setBudgetBtn" class="btn-outline">
+                    <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M11 4H4a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2v-7" />
+                        <path d="M18.5 2.5a2.121 2.121 0 0 1 3 3L12 15l-4 1 1-4 9.5-9.5z" />
+                    </svg>
+                    Set Budget
+                </button>
+            </div>
+            <div class="budget-content">
+                <div class="budget-amounts">
+                    <div class="budget-item">
+                        <span class="budget-label">Budget</span>
+                        <span class="budget-value" id="budgetAmount">₹0</span>
+                    </div>
+                    <div class="budget-item">
+                        <span class="budget-label">Spent</span>
+                        <span class="budget-value spent" id="spentAmount">₹0</span>
+                    </div>
+                    <div class="budget-item">
+                        <span class="budget-label">Remaining</span>
+                        <span class="budget-value remaining" id="remainingAmount">₹0</span>
+                    </div>
+                </div>
+                <div class="budget-progress">
+                    <div class="progress-bar">
+                        <div class="progress-fill" id="budgetProgress" style="width: 0%"></div>
+                    </div>
+                    <div class="progress-text" id="budgetPercentage">0% of budget used</div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Content Grid -->
+        <div class="content-grid">
+            <!-- Spending Analytics -->
+            <div class="card spending-card">
+                <div class="card-header">
+                    <h3>Spending Analytics</h3>
+                    <button class="btn-text" id="selectCategoryBtn">
+                        <svg width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor"
+                            stroke-width="2">
+                            <circle cx="12" cy="12" r="3" />
+                            <path
+                                d="M12 1v6m0 6v6m5.2-13.2l-4.2 4.2m0 6l4.2 4.2M23 12h-6m-6 0H1m18.2 5.2l-4.2-4.2m0-6l4.2-4.2" />
+                        </svg>
+                        Select category
+                    </button>
+                </div>
+                <div class="chart-container">
+                    <canvas id="spendingChart"></canvas>
+                    <div class="chart-center-text">
+                        <div class="chart-total" id="chartTotal">₹0</div>
+                        <div class="chart-label">Total Spent</div>
+                    </div>
+                </div>
+            </div>
+
+
+            <!-- Recent Transactions Widget -->
+            <div class="card recent-transactions-card">
+                <div class="card-header">
+                    <h3>Recent Transactions</h3>
+                    <a href="history.html" class="btn-text">View All</a>
+                </div>
+                <div id="recentTransactionsList" class="recent-transactions-list">
+                    <!-- Recent transactions will be displayed here -->
+                </div>
+            </div>
+
+            <!-- Monthly Transactions -->
+            <div class="card transactions-card">
+                <div class="card-header">
+                    <h3>Monthly Transactions</h3>
+                </div>
+                <div class="transactions-table">
+                    <table>
+                        <thead>
+                            <tr>
+                                <th>Date</th>
+                                <th>Title</th>
+                                <th>Category</th>
+                                <th>Amount</th>
+                            </tr>
+                        </thead>
+                        <tbody id="transactionsTableBody">
+                            <tr>
+                                <td colspan="4" class="empty-state-table">No transactions found for this month</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </main>
+
+    <!-- Category Drawer -->
+    <div id="categoryDrawer" class="drawer-overlay">
+        <div class="drawer">
+            <div class="drawer-header">
+                <h2>Select Category</h2>
+                <button class="drawer-close" id="closeDrawer">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="18" y1="6" x2="6" y2="18" />
+                        <line x1="6" y1="6" x2="18" y2="18" />
+                    </svg>
+                </button>
+            </div>
+            <div class="drawer-content">
+                <div class="category-grid" id="categoryGrid">
+                    <!-- Categories will be populated here -->
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Set Budget Modal -->
+    <div id="budgetModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Set Monthly Budget</h2>
+                <button class="modal-close" id="closeBudgetModal">&times;</button>
+            </div>
+            <form id="budgetForm">
+                <div class="form-group">
+                    <label for="budgetInput" class="form-label">Budget Amount (₹)</label>
+                    <input type="number" id="budgetInput" class="form-input" placeholder="Enter budget amount"
+                        step="100" min="0" required>
+                    <span class="form-error" id="budgetError"></span>
+                </div>
+                <div class="modal-actions">
+                    <button type="button" class="btn-outline" id="cancelBudgetBtn">Cancel</button>
+                    <button type="submit" class="btn-primary">Save Budget</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Add Transaction Modal -->
+    <div id="transactionModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title" id="modalTitle">Add Transaction</h2>
+                <button class="modal-close" id="closeModal">&times;</button>
+            </div>
+            <form id="transactionForm">
+                <input type="hidden" id="transactionId">
+
+                <div class="form-group">
+                    <label for="transactionTitle" class="form-label">Title</label>
+                    <input type="text" id="transactionTitle" class="form-input" placeholder="e.g., Grocery Shopping"
+                        required>
+                    <span class="form-error" id="titleError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="transactionAmount" class="form-label">Amount (₹)</label>
+                    <input type="number" id="transactionAmount" class="form-input" placeholder="0.00" step="0.01"
+                        min="0" required>
+                    <span class="form-error" id="amountError"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="transactionCategory" class="form-label">Category</label>
+                    <select id="transactionCategory" class="form-select" required>
+                        <option value="">Select Category</option>
+                    </select>
+                </div>
+
+                <div class="form-group">
+                    <label for="transactionDate" class="form-label">Date</label>
+                    <input type="date" id="transactionDate" class="form-input" required>
+                </div>
+
+                <div class="form-group">
+                    <label for="transactionDescription" class="form-label">Description</label>
+                    <textarea id="transactionDescription" class="form-textarea" placeholder="Add details..."></textarea>
+                </div>
+
+                <div class="form-error" id="formError"></div>
+
+                <div class="modal-actions">
+                    <button type="button" class="btn-outline" id="cancelBtn">Cancel</button>
+                    <button type="submit" class="btn-primary" id="submitBtn">Save Transaction</button>
+                </div>
+            </form>
+        </div>
+    </div>
+
+    <!-- Expanded Graph Modal -->
+    <div id="expandedGraphModal" class="modal-overlay">
+        <div class="modal" style="max-width: 800px; width: 90%;">
+            <div class="modal-header">
+                <h2 class="modal-title">Budget vs Spending Analysis</h2>
+                <button class="modal-close" id="closeExpandedGraphModal">&times;</button>
+            </div>
+            <div class="modal-content" style="padding: 20px;">
+                <div style="height: 400px; width: 100%;">
+                    <canvas id="expandedBudgetChart"></canvas>
+                </div>
+                <div class="budget-summary"
+                    style="margin-top: 20px; display: flex; justify-content: space-around; text-align: center;">
+                    <div>
+                        <div style="font-size: 14px; color: #666;">Total Budget</div>
+                        <div id="expandedBudgetTotal" style="font-size: 24px; font-weight: bold; color: #4facfe;">₹0
+                        </div>
+                    </div>
+                    <div>
+                        <div style="font-size: 14px; color: #666;">Total Spent</div>
+                        <div id="expandedBudgetSpent" style="font-size: 24px; font-weight: bold; color: #fa709a;">₹0
+                        </div>
+                    </div>
+                    <div>
+                        <div style="font-size: 14px; color: #666;">Remaining</div>
+                        <div id="expandedBudgetRemaining" style="font-size: 24px; font-weight: bold; color: #a8edea;">₹0
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    <script src="../js/firebase-config.js"></script>
+
+    <script src="../js/utils/storage.js"></script>
+    <script src="../js/utils/validation.js"></script>
+    <script src="../js/expenses.js"></script>
+    <script src="../js/dashboard-new.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/theme.js"></script>
+</body>
+
+</html>

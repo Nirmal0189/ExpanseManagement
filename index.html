@@ -1,0 +1,212 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Track and manage your expenses with ease">
+    <title>Expense Manager - Track Your Spending</title>
+    <link rel="stylesheet" href="css/styles.css">
+    <style>
+        .landing-page {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 50%, #16213e 100%);
+            position: relative;
+            overflow: hidden;
+        }
+
+        .landing-background {
+            position: absolute;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: 0;
+        }
+
+        .gradient-orb {
+            position: absolute;
+            border-radius: 50%;
+            filter: blur(80px);
+            opacity: 0.6;
+            animation: float 8s ease-in-out infinite;
+        }
+
+        .orb-1 {
+            width: 400px;
+            height: 400px;
+            background: radial-gradient(circle, rgba(102, 126, 234, 0.4) 0%, transparent 70%);
+            top: -100px;
+            left: -100px;
+        }
+
+        .orb-2 {
+            width: 500px;
+            height: 500px;
+            background: radial-gradient(circle, rgba(118, 75, 162, 0.3) 0%, transparent 70%);
+            bottom: -150px;
+            right: -150px;
+            animation-delay: 2s;
+            animation-duration: 10s;
+        }
+
+        .landing-content {
+            position: relative;
+            z-index: 1;
+            text-align: center;
+            padding: var(--spacing-xl);
+            max-width: 800px;
+        }
+
+        .landing-icon {
+            font-size: 5rem;
+            margin-bottom: var(--spacing-lg);
+            animation: float 3s ease-in-out infinite;
+        }
+
+        .landing-title {
+            font-size: var(--font-size-4xl);
+            font-weight: 800;
+            margin-bottom: var(--spacing-md);
+            background: var(--primary-gradient);
+            -webkit-background-clip: text;
+            -webkit-text-fill-color: transparent;
+            background-clip: text;
+        }
+
+        .landing-subtitle {
+            font-size: var(--font-size-xl);
+            color: var(--text-secondary);
+            margin-bottom: var(--spacing-xl);
+            line-height: 1.6;
+        }
+
+        .landing-features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+            gap: var(--spacing-md);
+            margin-bottom: var(--spacing-xl);
+        }
+
+        .feature-item {
+            background: var(--glass-bg);
+            border: 1px solid var(--glass-border);
+            border-radius: var(--radius-lg);
+            padding: var(--spacing-lg);
+            backdrop-filter: blur(10px);
+        }
+
+        .feature-icon {
+            font-size: 2rem;
+            margin-bottom: var(--spacing-sm);
+        }
+
+        .feature-title {
+            font-size: var(--font-size-lg);
+            font-weight: 600;
+            margin-bottom: var(--spacing-xs);
+        }
+
+        .feature-description {
+            font-size: var(--font-size-sm);
+            color: var(--text-muted);
+        }
+
+        .landing-actions {
+            display: flex;
+            gap: var(--spacing-md);
+            justify-content: center;
+            flex-wrap: wrap;
+        }
+
+        @media (max-width: 767px) {
+            .landing-icon {
+                font-size: 3rem;
+            }
+
+            .landing-title {
+                font-size: var(--font-size-3xl);
+            }
+
+            .landing-subtitle {
+                font-size: var(--font-size-base);
+            }
+
+            .landing-features {
+                grid-template-columns: 1fr;
+            }
+
+            .landing-actions {
+                flex-direction: column;
+            }
+
+            .landing-actions .btn {
+                width: 100%;
+            }
+        }
+    </style>
+</head>
+
+<body>
+    <div class="landing-page">
+        <div class="landing-background">
+            <div class="gradient-orb orb-1"></div>
+            <div class="gradient-orb orb-2"></div>
+        </div>
+
+        <div class="landing-content fade-in">
+            <div class="landing-icon">💰</div>
+            <h1 class="landing-title">Expense Manager</h1>
+            <p class="landing-subtitle">
+                Take control of your finances. Track expenses, analyze spending, and achieve your financial goals.
+            </p>
+
+            <div class="landing-features">
+                <div class="feature-item">
+                    <div class="feature-icon">📊</div>
+                    <h3 class="feature-title">Track Expenses</h3>
+                    <p class="feature-description">Monitor all your spending in one place</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">📈</div>
+                    <h3 class="feature-title">View Analytics</h3>
+                    <p class="feature-description">Get insights into your spending habits</p>
+                </div>
+                <div class="feature-item">
+                    <div class="feature-icon">🎯</div>
+                    <h3 class="feature-title">Set Goals</h3>
+                    <p class="feature-description">Manage categories and budgets</p>
+                </div>
+            </div>
+
+            <div class="landing-actions">
+                <a href="pages/login.html" class="btn btn-primary">
+                    <span>Login</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M5 12h14M12 5l7 7-7 7" />
+                    </svg>
+                </a>
+                <a href="pages/register.html" class="btn btn-secondary">
+                    <span>Create Account</span>
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M16 21v-2a4 4 0 0 0-4-4H5a4 4 0 0 0-4 4v2" />
+                        <circle cx="8.5" cy="7" r="4" />
+                        <path d="M20 8v6M23 11h-6" />
+                    </svg>
+                </a>
+            </div>
+        </div>
+    </div>
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    <script src="js/firebase-config.js"></script>
+    <script src="js/theme.js"></script>
+</body>
+
+</html>

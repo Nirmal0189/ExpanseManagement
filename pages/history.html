@@ -1,0 +1,201 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="View your transaction history">
+    <title>History - Expense Manager</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <link rel="stylesheet" href="../css/dashboard-new.css">
+    <!-- history.css was small, dashboard-new.css likely covers it or I can add minimal styles if needed -->
+    <style>
+        /* Minimal History Specific Styles if not in dashboard-new.css */
+        .history-controls {
+            display: flex;
+            gap: 16px;
+            margin-bottom: 24px;
+            flex-wrap: wrap;
+        }
+
+        .history-controls select,
+        .history-controls button {
+            padding: 10px 16px;
+            border: 1px solid #e5e7eb;
+            border-radius: 8px;
+            background: white;
+            color: #1a1a1a;
+            font-size: 14px;
+        }
+
+        body.dark-mode .history-controls select,
+        body.dark-mode .history-controls button {
+            background: #1a1a2e;
+            border-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+    </style>
+</head>
+
+<body class="dashboard-body">
+    <!-- Sidebar Overlay -->
+    <div class="sidebar-overlay" id="sidebarOverlay"></div>
+
+    <!-- Sidebar -->
+    <aside class="sidebar" id="sidebar">
+        <div class="sidebar-header">
+            <div class="logo">
+                <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="2" y="3" width="20" height="14" rx="2" ry="2" />
+                    <line x1="8" y1="21" x2="16" y2="21" />
+                    <line x1="12" y1="17" x2="12" y2="21" />
+                </svg>
+                <span>Expensify</span>
+            </div>
+        </div>
+
+        <nav class="sidebar-nav">
+            <a href="dashboard.html" class="nav-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="3" y="3" width="7" height="7" />
+                    <rect x="14" y="3" width="7" height="7" />
+                    <rect x="14" y="14" width="7" height="7" />
+                    <rect x="3" y="14" width="7" height="7" />
+                </svg>
+                <span>Dashboard</span>
+            </a>
+            <a href="history.html" class="nav-item active">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <path d="M12 2v20M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6" />
+                </svg>
+                <span>History</span>
+            </a>
+            <a href="cards.html" class="nav-item">
+                <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                    <rect x="1" y="4" width="22" height="16" rx="2" ry="2" />
+                    <line x1="1" y1="10" x2="23" y2="10" />
+                </svg>
+                <span>Cards</span>
+            </a>
+        </nav>
+
+        <div class="sidebar-footer">
+            <div class="theme-switch-wrapper">
+                <label class="theme-switch" for="checkbox">
+                    <input type="checkbox" id="checkbox" />
+                    <div class="slider round"></div>
+                </label>
+                <em>Dark Mode</em>
+            </div>
+
+            <div class="user-profile" style="margin-top: 20px;">
+                <div class="user-avatar">
+                    <span id="userInitials">TU</span>
+                </div>
+                <div class="user-info">
+                    <div class="user-name" id="sidebarUserName">Test User</div>
+                    <button id="logoutBtn" class="logout-link">Logout</button>
+                </div>
+            </div>
+        </div>
+    </aside>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <header class="page-header">
+            <div class="header-left">
+                <button class="mobile-menu-btn" id="openSidebar">
+                    <svg width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <line x1="3" y1="12" x2="21" y2="12" />
+                        <line x1="3" y1="6" x2="21" y2="6" />
+                        <line x1="3" y1="18" x2="21" y2="18" />
+                    </svg>
+                </button>
+                <h1>Transaction History</h1>
+            </div>
+            <div class="header-right">
+                <button id="downloadReportBtn" class="btn-primary">
+                    <svg width="20" height="20" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2">
+                        <path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4" />
+                        <polyline points="7 10 12 15 17 10" />
+                        <line x1="12" y1="15" x2="12" y2="3" />
+                    </svg>
+                    Download Report
+                </button>
+            </div>
+        </header>
+
+        <div class="card">
+            <div class="history-controls">
+                <select id="filterMonth">
+                    <option value="">All Months</option>
+                    <!-- Populated by JS -->
+                </select>
+                <select id="filterCategory">
+                    <option value="">All Categories</option>
+                    <!-- Populated by JS -->
+                </select>
+                <select id="sortBy">
+                    <option value="date-desc">Date (Newest First)</option>
+                    <option value="date-asc">Date (Oldest First)</option>
+                    <option value="amount-desc">Amount (High to Low)</option>
+                    <option value="amount-asc">Amount (Low to High)</option>
+                </select>
+            </div>
+
+            <div class="transactions-table">
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Date</th>
+                            <th>Title</th>
+                            <th>Category</th>
+                            <th>Description</th>
+                            <th>Amount</th>
+                            <th>Actions</th>
+                        </tr>
+                    </thead>
+                    <tbody id="historyTableBody">
+                        <!-- Populated by JS -->
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </main>
+
+    <!-- Delete Confirmation Modal -->
+    <div id="deleteConfirmModal" class="modal-overlay">
+        <div class="modal">
+            <div class="modal-header">
+                <h2 class="modal-title">Delete Transaction</h2>
+                <button class="modal-close" id="closeDeleteModal">&times;</button>
+            </div>
+            <div class="modal-content">
+                <p>Are you sure you want to delete this transaction? This action cannot be undone.</p>
+                <div class="modal-actions" style="margin-top: 24px;">
+                    <button class="btn-outline" id="cancelDelete">Cancel</button>
+                    <button class="btn-primary" id="confirmDelete" style="background: #dc2626;">Delete</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Scripts -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.1/jspdf.umd.min.js"></script>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf-autotable/3.8.1/jspdf.plugin.autotable.min.js"></script>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-storage-compat.js"></script>
+    <script src="../js/firebase-config.js"></script>
+
+    <script src="../js/utils/storage.js"></script>
+    <script src="../js/expenses.js"></script>
+    <script src="../js/history.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/theme.js"></script>
+</body>
+
+</html>

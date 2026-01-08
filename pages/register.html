@@ -1,0 +1,166 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Create Account - Expense Manager</title>
+    <link rel="stylesheet" href="../css/styles.css">
+    <style>
+        .auth-container {
+            min-height: 100vh;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            background: linear-gradient(135deg, #0f0f23 0%, #1a1a2e 100%);
+            padding: 20px;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .auth-card {
+            width: 100%;
+            max-width: 450px;
+            padding: 40px;
+            border-radius: 24px;
+            background: rgba(255, 255, 255, 0.05);
+            backdrop-filter: blur(20px);
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            box-shadow: 0 20px 40px rgba(0, 0, 0, 0.4);
+            position: relative;
+            z-index: 10;
+        }
+
+        .auth-header {
+            text-align: center;
+            margin-bottom: 30px;
+        }
+
+        .auth-logo {
+            width: 50px;
+            height: 50px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            margin: 0 auto 16px;
+            font-size: 24px;
+            color: white;
+            box-shadow: 0 10px 20px rgba(102, 126, 234, 0.3);
+        }
+
+        .auth-title {
+            font-size: 24px;
+            font-weight: 700;
+            color: white;
+            margin-bottom: 8px;
+        }
+
+        .auth-subtitle {
+            font-size: 14px;
+            color: #a0a0b0;
+        }
+
+        .auth-footer {
+            margin-top: 30px;
+            text-align: center;
+            font-size: 14px;
+            color: #a0a0b0;
+        }
+
+        .auth-footer a {
+            color: #667eea;
+            font-weight: 600;
+        }
+
+        .auth-footer a:hover {
+            text-decoration: underline;
+        }
+
+        .form-input {
+            background: rgba(0, 0, 0, 0.2);
+            border-color: rgba(255, 255, 255, 0.1);
+            color: white;
+        }
+
+        .form-input:focus {
+            background: rgba(0, 0, 0, 0.4);
+            border-color: #667eea;
+        }
+
+        .form-label {
+            color: #e0e0e0;
+        }
+    </style>
+</head>
+
+<body>
+    <div class="auth-container">
+        <!-- Floating Orbs -->
+        <div
+            style="position: absolute; width: 400px; height: 400px; background: #4facfe; filter: blur(120px); opacity: 0.15; top: -100px; right: -100px; border-radius: 50%;">
+        </div>
+        <div
+            style="position: absolute; width: 300px; height: 300px; background: #00f2fe; filter: blur(100px); opacity: 0.15; bottom: -50px; left: -50px; border-radius: 50%;">
+        </div>
+
+        <div class="auth-card slide-in-right">
+            <div class="auth-header">
+                <div class="auth-logo">🚀</div>
+                <h1 class="auth-title">Create Account</h1>
+                <p class="auth-subtitle">Join us and start tracking your wealth</p>
+            </div>
+
+            <form id="registerForm">
+                <div class="form-group">
+                    <label for="nameInput" class="form-label">Full Name</label>
+                    <input type="text" id="nameInput" class="form-input" placeholder="e.g. John Doe" required>
+                    <span class="form-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="emailInput" class="form-label">Email Address</label>
+                    <input type="email" id="emailInput" class="form-input" placeholder="name@example.com" required>
+                    <span class="form-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="passwordInput" class="form-label">Password</label>
+                    <input type="password" id="passwordInput" class="form-input" placeholder="Create a strong password"
+                        required minlength="6">
+                    <span class="form-error"></span>
+                </div>
+
+                <div class="form-group">
+                    <label for="confirmPasswordInput" class="form-label">Confirm Password</label>
+                    <input type="password" id="confirmPasswordInput" class="form-input" placeholder="Repeat password"
+                        required>
+                    <span class="form-error"></span>
+                </div>
+
+                <div class="form-error" id="generalError" style="margin-bottom: 20px; text-align: center;"></div>
+
+                <button type="submit" class="btn btn-primary" style="width: 100%;">Create Account</button>
+            </form>
+
+            <div class="auth-footer">
+                Already have an account? <a href="login.html">Sign in</a>
+            </div>
+        </div>
+    </div>
+
+    <!-- Firebase SDK -->
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-app-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-auth-compat.js"></script>
+    <script src="https://www.gstatic.com/firebasejs/10.7.1/firebase-firestore-compat.js"></script>
+    <script src="../js/firebase-config.js"></script>
+
+    <!-- Utils and Logic -->
+    <script src="../js/utils/storage.js"></script>
+    <script src="../js/utils/validation.js"></script>
+    <script src="../js/auth.js"></script>
+    <script src="../js/register.js"></script>
+</body>
+
+</html>

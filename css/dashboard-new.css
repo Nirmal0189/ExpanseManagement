@@ -17,7 +17,7 @@
 .sidebar {
     width: 280px;
     background: #ffffff;
-    border-right: 1px solid #e5e7eb;
+    border-right: 1px solid var(--glass-border);
     display: flex;
     flex-direction: column;
     position: fixed;
@@ -237,13 +237,21 @@
 }
 
 .stat-card {
-    background: white;
-    border: 1px solid #e5e7eb;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
     border-radius: 12px;
     padding: 24px;
     display: flex;
     align-items: flex-start;
     gap: 16px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.stat-card:hover {
+    transform: translateY(-4px);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.1);
 }
 
 .stat-icon {
@@ -312,10 +320,12 @@
 }
 
 .card {
-    background: white;
-    border: 1px solid #e5e7eb;
+    background: var(--glass-bg);
+    border: 1px solid var(--glass-border);
+    backdrop-filter: blur(10px);
     border-radius: 12px;
     padding: 24px;
+    box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
 }
 
 .card-header {
@@ -552,7 +562,11 @@
 }
 
 .modal {
-    background: white;
+    background: #ffffff;
+    /* Fallback */
+    background: linear-gradient(145deg, #ffffff, #f5f7fa);
+    border: 1px solid var(--glass-border);
+    box-shadow: 0 20px 50px rgba(0, 0, 0, 0.1);
     border-radius: 16px;
     padding: 32px;
     max-width: 500px;

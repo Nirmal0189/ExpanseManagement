@@ -395,13 +395,128 @@
                 if (sidebarOverlay) sidebarOverlay.classList.remove('active');
             });
         }
+
+        // Category Drawer
+        const selectCatBtn = getEl('selectCategoryBtn');
+        const catDrawer = getEl('categoryDrawer');
+        const closeDrawerBtn = getEl('closeDrawer');
+
+        if (selectCatBtn) {
+            selectCatBtn.addEventListener('click', () => {
+                if (catDrawer) catDrawer.classList.add('active');
+            });
+        }
+
+        if (closeDrawerBtn) {
+            closeDrawerBtn.addEventListener('click', () => {
+                if (catDrawer) catDrawer.classList.remove('active');
+            });
+        }
+
+        // Close drawer when clicking overlay
+        if (catDrawer) {
+            catDrawer.addEventListener('click', (e) => {
+                if (e.target === catDrawer) catDrawer.classList.remove('active');
+            });
+        }
+
+        // Expanded Graph Modal
+        const incomeCard = getEl('incomeStatCard');
+        const expandedModal = getEl('expandedGraphModal');
+        const closeExpandedBtn = getEl('closeExpandedGraphModal');
+
+        if (incomeCard) {
+            incomeCard.addEventListener('click', () => {
+                if (expandedModal) {
+                    expandedModal.classList.add('active');
+                    renderExpandedChart();
+                }
+            });
+        }
+
+        if (closeExpandedBtn) {
+            closeExpandedBtn.addEventListener('click', () => {
+                if (expandedModal) expandedModal.classList.remove('active');
+            });
+        }
+
+        if (expandedModal) {
+            expandedModal.addEventListener('click', (e) => {
+                if (e.target === expandedModal) expandedModal.classList.remove('active');
+            });
+        }
     }
 
-    // Init Logic
-    if (document.readyState === 'loading') {
-        document.addEventListener('DOMContentLoaded', init);
-    } else {
-        init();
-    }
+    // Render Expanded Chart
+    async function renderExpandedChart() {
+        const ctx = getEl('expandedBudgetChart');
+        if (!ctx) return;
 
-})();
+        const budget = await ExpenseManager.getBudget();
+        const expenses = await ExpenseManager.getExpenses();
+        // Filter for current month
+        const filtered = expenses.filter(e => e.date.startsWith(currentMonth));
+        const totalSpent = filtered.reduce((acc, curr) => acc + parseFloat(curr.price), 0);
+
+        // Update Summary
+        if (getEl('expandedBudgetTotal')) getEl('expandedBudgetTotal').textContent = ExpenseManager.formatCurrency(budget);
+        if (getEl('expandedBudgetSpent')) getEl('expandedBudgetSpent').textContent = ExpenseManager.formatCurrency(totalSpent);
+        const remaining = budget - totalSpent;
+        const remainingEl = getEl('expandedBudgetRemaining');
+        if (remainingEl) {
+            remainingEl.textContent = ExpenseManager.formatCurrency(remaining);
+            remainingEl.style.color = remaining < 0 ? '#dc2626' : '#a8edea';
+        }
+
+        // Mock Data for "Budget vs My Spending" over time
+        // In a real app we would bucket by day
+        const dataSpent = [totalSpent * 0.1, totalSpent * 0.3, totalSpent * 0.6, totalSpent * 0.8, totalSpent];
+        const dataBudget = [budget, budget, budget, budget, budget]; // Flat line
+
+        if (window.expandedChartInstance) {
+            window.expandedChartInstance.destroy();
+        }
+
+        window.expandedChartInstance = new Chart(ctx, {
+            type: 'line',
+            data: {
+                labels: ['Week 1', 'Week 2', 'Week 3', 'Week 4', 'Today'],
+                datasets: [
+                    {
+                        label: 'My Spending',
+                        data: dataSpent,
+                        borderColor: '#fa709a',
+                        backgroundColor: 'rgba(250, 112, 154, 0.2)',
+                        fill: true,
+                        tension: 0.4
+                    },
+                    {
+                        label: 'Budget Limit',
+                        data: dataBudget,
+                        borderColor: '#4facfe',
+                        borderDash: [5, 5],
+                        fill: false,
+                        tension: 0
+                    }
+                ]
+            },
+            options: {
+                responsive: true,
+                maintainAspectRatio: false,
+                plugins: {
+                    title: { display: true, text: 'Spending Trend' }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+
+        // Init Logic
+        if (document.readyState === 'loading') {
+            document.addEventListener('DOMContentLoaded', init);
+        } else {
+            init();
+        }
+
+    }) ();

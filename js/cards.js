@@ -11,20 +11,48 @@
         renderCards();
     }
 
-    // Using local storage for cards demo
-    function getCards() {
+    // Data Operations
+    async function getCards() {
+        if (typeof db !== 'undefined') {
+            try {
+                const user = StorageUtil.get('currentUser');
+                if (user) {
+                    const snapshot = await db.collection('cards')
+                        .where('userId', '==', user.id)
+                        .get();
+                    return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
+                }
+            } catch (e) {
+                console.error("Firestore get cards failed", e);
+            }
+        }
         return StorageUtil.get('cards') || [];
     }
 
-    function saveCard(card) {
-        const cards = getCards();
+    async function saveCard(card) {
+        const user = StorageUtil.get('currentUser');
+        if (user) {
+            card.userId = user.id;
+        }
+
+        if (typeof db !== 'undefined') {
+            try {
+                await db.collection('cards').add(card);
+                return true;
+            } catch (e) {
+                console.error("Firestore add card failed", e);
+            }
+        }
+
+        const cards = StorageUtil.get('cards') || [];
         cards.push(card);
         StorageUtil.set('cards', cards);
+        return true;
     }
 
-    function renderCards() {
+    async function renderCards() {
         if (!container) return;
-        const cards = getCards();
+        const cards = await getCards();
 
         container.innerHTML = cards.map(createCardHTML).join('') + `
             <div class="add-card-btn" id="addCardBtnInternal">
@@ -44,7 +72,8 @@
 
     function createCardHTML(card) {
         // Mask number
-        const masked = card.number.slice(0, 4) + ' **** **** ' + card.number.slice(-4);
+        const val = card.number || '0000 0000 0000 0000';
+        const masked = val.slice(0, 4) + ' **** **** ' + val.slice(-4);
         return `
             <div class="credit-card">
                 <div class="card-brand">${card.brand}</div>
@@ -81,7 +110,7 @@
 
         const form = getEl('cardForm');
         if (form) {
-            form.addEventListener('submit', (e) => {
+            form.addEventListener('submit', async (e) => {
                 e.preventDefault();
                 const card = {
                     holder: getEl('cardHolder').value,
@@ -89,7 +118,7 @@
                     expiry: getEl('cardExpiry').value,
                     brand: getEl('cardBrand').value
                 };
-                saveCard(card);
+                await saveCard(card);
                 closeModal();
                 form.reset();
                 renderCards();

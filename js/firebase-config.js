@@ -1,12 +1,12 @@
 // Firebase Configuration
-// IMPORTANT: Replaced with placeholders. Please restore your real keys.
 const firebaseConfig = {
-    apiKey: "YOUR_API_KEY",
-    authDomain: "expense-manager.firebaseapp.com",
-    projectId: "expense-manager",
-    storageBucket: "expense-manager.appspot.com",
-    messagingSenderId: "123456789",
-    appId: "1:123456789:web:abcdef"
+    apiKey: "AIzaSyCRomQxl_QiQxYvLVGkIWfqaO3Ay6x2Hlo",
+    authDomain: "ai-automation-card.firebaseapp.com",
+    projectId: "ai-automation-card",
+    storageBucket: "ai-automation-card.firebasestorage.app",
+    messagingSenderId: "55157088218",
+    appId: "1:55157088218:web:fd5e1a3718c04084b6aae3",
+    measurementId: "G-JYP9P5YV4V"
 };
 
 // Initialize Firebase

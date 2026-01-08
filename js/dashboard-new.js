@@ -66,17 +66,19 @@
         `).join('');
 
         // Expose selectCategory globally so onclick works
-        window.selectCategory = function (catName) {
-            // Logic to handle category selection (e.g. filter chart or just close for now)
-            // For now, we entered via "Select Category" button on Spending Analytics card
-            // Maybe we want to filter the spending chart?
-
-            // Or if we are in the Add Transaction modal context? 
-            // The drawer seems to be for the Spending Analytics filter based on ID selectCategoryBtn
-
-            // Let's assume it updates a global filter or just logs for now
-            // But realistically it should update the chart
+        window.selectCategory = async function (catName) {
             console.log('Selected category:', catName);
+
+            const expenses = await ExpenseManager.getExpenses();
+            const filtered = expenses.filter(e => e.date.startsWith(currentMonth))
+                .filter(e => e.category === catName);
+
+            updateRecentTransactions(filtered);
+            updateTransactionsTable(filtered);
+
+            // Update header to show filter
+            const header = document.querySelector('.transactions-card h3');
+            if (header) header.textContent = `Transactions: ${catName}`;
 
             // Close drawer
             const drawer = getEl('categoryDrawer');
@@ -305,12 +307,15 @@
         if (addBtn) addBtn.addEventListener('click', () => {
             // Populate category select
             const catSelect = getEl('transactionCategory');
+            // If only default option exists or empty
             if (catSelect && catSelect.options.length <= 1) {
-                const categories = ['Food', 'Groceries', 'Transport', 'Bills', 'Shopping', 'Other'];
+                // Clear existing except first
+                catSelect.innerHTML = '<option value="">Select Category</option>';
+
                 categories.forEach(c => {
                     const opt = document.createElement('option');
-                    opt.value = c;
-                    opt.textContent = c;
+                    opt.value = c.name;
+                    opt.textContent = `${c.icon} ${c.name}`;
                     catSelect.appendChild(opt);
                 });
             }
@@ -511,12 +516,13 @@
                 }
             }
         });
+    }
 
-        // Init Logic
-        if (document.readyState === 'loading') {
-            document.addEventListener('DOMContentLoaded', init);
-        } else {
-            init();
-        }
+    // Init Logic
+    if (document.readyState === 'loading') {
+        document.addEventListener('DOMContentLoaded', init);
+    } else {
+        init();
+    }
 
-    }) ();
+})();

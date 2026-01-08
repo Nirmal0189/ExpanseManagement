@@ -1,0 +1,12 @@
+/* Mobile Specific Styles 
+   Most responsive styles are handled in styles.css and dashboard-new.css
+   This file is kept for legacy support or specific mobile overrides
+*/
+
+@media (max-width: 768px) {
+
+    /* Add specific mobile tweaks here if necessary */
+    .mobile-hidden {
+        display: none !important;
+    }
+}

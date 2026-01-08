@@ -22,13 +22,66 @@
     // State
     let currentMonth = new Date().toISOString().slice(0, 7);
 
+    // Categories
+    const categories = [
+        { name: 'Food', icon: '🍔' },
+        { name: 'Groceries', icon: '🛒' },
+        { name: 'Dining', icon: '🍽️' },
+        { name: 'Transport', icon: '🚌' },
+        { name: 'Fuel', icon: '⛽' },
+        { name: 'Travel', icon: '✈️' },
+        { name: 'Shopping', icon: '🛍️' },
+        { name: 'Clothes', icon: '👕' },
+        { name: 'Gadgets', icon: '📱' },
+        { name: 'Movies', icon: '🎬' },
+        { name: 'Bills', icon: '📄' },
+        { name: 'Rent', icon: '🏠' },
+        { name: 'Utilities', icon: '💡' },
+        { name: 'Health', icon: '💊' },
+        { name: 'Fitness', icon: '💪' },
+        { name: 'Education', icon: '📚' },
+        { name: 'Insurance', icon: '🛡️' },
+        { name: 'Other', icon: '📝' }
+    ];
+
     async function init() {
         checkAuth();
         setupEventListeners();
         populateMonthSelector();
+        populateCategoryGrid(); // Added this
 
         // Initial Data Load
         await loadDashboardData();
+    }
+
+    function populateCategoryGrid() {
+        const grid = getEl('categoryGrid');
+        if (!grid) return;
+
+        grid.innerHTML = categories.map(cat => `
+            <div class="category-item" onclick="selectCategory('${cat.name}')">
+                <div class="category-icon">${cat.icon}</div>
+                <div class="category-name">${cat.name}</div>
+            </div>
+        `).join('');
+
+        // Expose selectCategory globally so onclick works
+        window.selectCategory = function (catName) {
+            // Logic to handle category selection (e.g. filter chart or just close for now)
+            // For now, we entered via "Select Category" button on Spending Analytics card
+            // Maybe we want to filter the spending chart?
+
+            // Or if we are in the Add Transaction modal context? 
+            // The drawer seems to be for the Spending Analytics filter based on ID selectCategoryBtn
+
+            // Let's assume it updates a global filter or just logs for now
+            // But realistically it should update the chart
+            console.log('Selected category:', catName);
+
+            // Close drawer
+            const drawer = getEl('categoryDrawer');
+            if (drawer) drawer.classList.remove('active');
+        };
     }
 
     // Populate Month Selector

@@ -16,7 +16,6 @@ const ExpenseManager = {
             if (typeof db !== 'undefined') {
                 const snapshot = await db.collection(this.collectionName)
                     .where('userId', '==', user.id)
-                    .orderBy('date', 'desc') // Ensure index exists or this might fail
                     .get();
 
                 return snapshot.docs.map(doc => ({ id: doc.id, ...doc.data() }));
